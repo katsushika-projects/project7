@@ -22,3 +22,22 @@ bash:
 .PHONY: logs
 logs:
 	docker compose -f compose-dev.yaml logs
+
+# Lintとフォーマット
+.PHONY: black
+black:
+	docker compose -f compose-dev.yml exec django black .
+
+.PHONY: isort
+isort:
+	docker compose -f compose-dev.yml exec django isort .
+
+.PHONY: flake8
+flake8:
+	docker compose -f compose-dev.yml exec django flake8 .
+
+.PHONY: lint
+lint:
+	@make black
+	@make isort
+	@make flake8
