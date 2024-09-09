@@ -1,14 +1,14 @@
-
 from datetime import timedelta
-from django.utils import timezone
-from rest_framework.generics import get_object_or_404
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from django.utils import timezone
 
 from .models import Memo
 from .serializers import MemoSerializer
-
 
 
 class MemosAPIView(APIView):
@@ -16,14 +16,17 @@ class MemosAPIView(APIView):
         # リクエストボディのpasskeyから対象のMemoを取得
         passkey = request.data.get("passkey")
         if not passkey:
-            return Response({"detail": "passkeyをリクエストボディに含めてください．"}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(
+                {"detail": "passkeyをリクエストボディに含めてください．"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
         # オブジェクトが見つからない場合、404エラーを返す
         memo = get_object_or_404(Memo, passkey=passkey)
-        
+
         # シリアライズしてレスポンスを返す
         return Response(MemoSerializer(memo).data, status=status.HTTP_200_OK)
-    
+
+
 class DeleteExpiredMemosAPIView(APIView):
     def delete(self, request):
         # 現在の時刻から15分前を計算

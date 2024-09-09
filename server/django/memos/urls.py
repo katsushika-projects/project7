@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import DeleteExpiredMemosAPIView, MemosAPIView, MemoCreateAPIView, MemoRetrieveDestroyAPIView
+from .views import DeleteExpiredMemosAPIView, MemoCreateAPIView, MemoRetrieveDestroyAPIView, MemosAPIView
 
 app_name = "memos"
 

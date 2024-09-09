@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  build:
+  django-test:
     runs-on: ubuntu-latest
 
     steps:

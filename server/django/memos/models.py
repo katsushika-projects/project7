@@ -2,13 +2,14 @@ import os
 import random
 import string
 import uuid
+from io import BytesIO
+
+import qrcode
+
+from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
-
-import qrcode
-from io import BytesIO
-from django.core.files.base import ContentFile
 
 from .utils import get_frontend_url
 
@@ -17,7 +18,7 @@ class Memo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     memo = models.TextField()
     passkey = models.CharField(unique=True, max_length=6)
-    qr_img = models.ImageField(upload_to='qr_codes/', blank=True)
+    qr_img = models.ImageField(upload_to="qr_codes/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self) -> None:
@@ -45,18 +46,19 @@ class Memo(models.Model):
         qr.make(fit=True)
 
         # 生成したQRコードを画像に変換
-        img = qr.make_image(fill='black', back_color='white')
+        img = qr.make_image(fill="black", back_color="white")
 
         # 画像を一時メモリに保存
         img_io = BytesIO()
-        img.save(img_io, 'PNG')
-        img_content = ContentFile(img_io.getvalue(), 'qr_code.png')
+        img.save(img_io, "PNG")
+        img_content = ContentFile(img_io.getvalue(), "qr_code.png")
 
         # ImageFieldに画像を保存（インスタンスのIDに基づいたファイル名で保存）
-        self.qr_img.save(f'{self.id}.png', img_content, save=False)
+        self.qr_img.save(f"{self.id}.png", img_content, save=False)
 
         # 再度saveを呼び出してQRコードを保存
         super().save(*args, **kwargs)
+
 
 @receiver(pre_save, sender=Memo)
 def generate_passkey(sender, instance, **kwargs):
@@ -67,7 +69,7 @@ def generate_passkey(sender, instance, **kwargs):
         if not Memo.objects.filter(passkey=passkey).exists():
             instance.passkey = passkey
             break
-    
+
 
 @receiver(post_delete, sender=Memo)
 def delete_image_files(sender, instance, **kwargs):
