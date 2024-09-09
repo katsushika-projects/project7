@@ -1,0 +1,113 @@
+openapi: 3.1.0
+
+info:
+  title: 端末間メモ共有アプリ
+  summary: WEBブラウザで使用することができ，端末間でメモを共有することができるアプリケーションです． 
+  version: 1.0.0
+
+paths:
+  /memos/:
+    post:
+      tags: [メモ]
+      summary: メモを取得する
+      description: メモを取得するエンドポイント
+      requestBody:
+        description: passkeyを含めてください
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passkeyRequest'
+        required: true
+      responses:
+        '200':
+          description: メモの取得に成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/memoResponse'
+        '404':
+          description: メモが見つからない
+  /memos/{memoId}:
+    delete:
+      tags: [メモ]
+      summary: 対象のメモを削除する
+      description: 対象のメモを削除するエンドポイント
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          description: メモのID
+          schema:
+            type: string
+            format: uuid
+  /memos/create:
+    post:
+      tags: [メモ]
+      summary: メモを作成する
+      description: メモを作成するエンドポイント
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/memoRequest'
+      responses:
+        '200':
+          description: メモの作成に成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/memoResponse'
+  /memos/detele_expired:
+    delete:
+      tags: [メモ]
+      summary: 期限切れのメモを削除する
+      description: 作成から一定時間経過したメモを削除するエンドポイント
+
+
+components:
+  schemas:
+    id:
+      type: string
+      format: uuid
+      examples:
+        - 90dd991f-c7d6-4130-8bf9-f14d42afea51
+    memo:
+      type: string
+      examples:
+        - あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。
+    qr_img:
+      type: string
+      examples:
+        - https://example.com/qr_img.png
+    passkey:
+      type: string
+      examples:
+        - 240909
+    created_at:
+      type: string
+      format: date-time
+      readOnly: true
+
+    memoResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/id'
+        memo:
+          $ref: '#/components/schemas/memo'
+        qr_img:
+          $ref: '#/components/schemas/qr_img'
+        passkey:
+          $ref: '#/components/schemas/passkey'
+        created_at:
+          $ref: '#/components/schemas/created_at'
+    passkeyRequest:
+      type: object
+      properties:
+        passkey:
+          $ref: '#/components/schemas/passkey'
+    memoRequest:
+      type: object
+      properties:
+        memo:
+          $ref: '#/components/schemas/memo'
