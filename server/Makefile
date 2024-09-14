@@ -23,6 +23,10 @@ bash:
 logs:
 	docker compose -f compose-dev.yaml logs
 
+.PHONY: test
+test:
+	docker compose -f compose-dev.yml exec django python manage.py test
+
 # Lintとフォーマット
 .PHONY: black
 black:

@@ -141,3 +141,6 @@ MEDIA_ROOT = env.str("DJANGO_MEDIA_ROOT", default=BASE_DIR / "media")  # メデ�
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# メモを何分で削除するか
+MEMO_LIFETIME_MINUTES = 15

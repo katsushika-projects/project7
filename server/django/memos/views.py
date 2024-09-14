@@ -5,6 +5,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.conf import settings
 from django.utils import timezone
 
 from .models import Memo
@@ -29,10 +30,10 @@ class MemosAPIView(APIView):
 
 class DeleteExpiredMemosAPIView(APIView):
     def delete(self, request):
-        # 現在の時刻から15分前を計算
-        time_threshold = timezone.now() - timedelta(minutes=15)
+        # 現在の時刻からmemoの生存時間分前の時間を計算
+        time_threshold = timezone.now() - timedelta(minutes=settings.MEMO_LIFETIME_MINUTES)
 
-        # 15分以上前に作成されたメモの一覧を取得して削除
+        # 生存時間以上前に作成されたメモの一覧を取得して削除
         memos = Memo.objects.filter(created_at__lt=time_threshold)
         deleted_count, _ = memos.delete()
 
