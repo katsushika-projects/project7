@@ -29,22 +29,14 @@ paths:
           description: パスキーがリクエストボディに含まれていない
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    example: passkeyをリクエストボディに含めてください．
+              example:
+                detail: passkeyをリクエストボディに含めてください．
         '404':
           description: メモが見つからない
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    example: No Memo matches the given query.
+              example:
+                detail: No Memo matches the given query.
   /memos/{memoId}:
     get:
       tags: [メモ]
@@ -66,13 +58,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/memoResponse'
         404:
-          description: メモが見つからない
+          description: 当該メモが存在しない
           content:
             application/json:
-              examples:
-                メモが存在しない:
-                  value:
-                    detail: No Memo matches the given query.
+              example:
+                detail: No Memo matches the given query.
     delete:
       tags: [メモ]
       summary: 対象のメモを削除する
@@ -90,18 +80,14 @@ paths:
           description: メモの削除に成功
           content:
             application/json:
-              examples:
-                メモの削除に成功:
-                  value:
-                    detail: メモを削除しました．
+              example:
+                detail: メモを削除しました．
         404:
-          description: メモが見つからない
+          description: 当該メモが存在しない
           content:
             application/json:
-              examples:
-                メモが存在しない:
-                  value:
-                    detail: No Memo matches the given query.
+              example:
+                detail: No Memo matches the given query.
   /memos/create:
     post:
       tags: [メモ]
@@ -124,11 +110,9 @@ paths:
           description: メモが空欄
           content:
             application/json:
-              examples:
-                メモが空欄:
-                  value:
-                    memo:
-                      - この項目は空にできません。
+              example:
+                memo:
+                  - この項目は空にできません。
   /memos/detele_expired_memos:
     delete:
       tags: [メモ]
@@ -139,12 +123,8 @@ paths:
           description: 期限切れのメモの削除に成功
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  detail:
-                    type: string
-                    example: 4個のmemoを削除しました．
+              example:
+                detail: 4個のmemoを削除しました．
 
 
 components:
@@ -169,7 +149,8 @@ components:
     created_at:
       type: string
       format: date-time
-      readOnly: true
+      examples:
+        - 2024-09-16T10:35:49.716241+09:00
 
     memoResponse:
       type: object
