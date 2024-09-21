@@ -30,7 +30,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          ls -a ../
-          source ../.env
+          export $(grep -v '^#' ../.env | xargs)
           python3 manage.py test
         working-directory: ./server/django
