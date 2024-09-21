@@ -25,7 +25,7 @@ jobs:
 
       - name: Copy env file
         run: |
-          cp .env.dev .env
+          cp .env.github-actions .env
         working-directory: ./server
 
       - name: Run Tests
