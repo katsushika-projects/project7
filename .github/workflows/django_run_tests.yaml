@@ -23,6 +23,11 @@ jobs:
           pip install -r requirements.txt
         working-directory: ./server/django
 
+      - name: Copy env file
+        run: |
+          cp .env.dev .env
+        working-directory: ./server
+
       - name: Run Tests
         run: |
           python3 manage.py test
