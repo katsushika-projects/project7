@@ -1,4 +1,5 @@
 import uuid
+from urllib.parse import urlparse
 
 from rest_framework.test import APITestCase
 
@@ -30,11 +31,14 @@ class MemoAPITestCase(APITestCase):
         # 作成したメモの取得
         response = self.client.post(self.memo_url, data={"passkey": passkey})
 
+        # Extract the path from the absolute URL
+        response_path = urlparse(response.data["qr_img"]).path
+
         # レスポンスの確認
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["id"], str(memo.id))
         self.assertEqual(response.data["memo"], memo_data["memo"])
-        self.assertEqual(response.data["qr_img"], memo.qr_img.url)
+        self.assertEqual(response_path, memo.qr_img.url)
         self.assertEqual(response.data["passkey"], passkey)
         self.assertEqual(response.data["created_at"], created_at)
 

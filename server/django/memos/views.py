@@ -25,7 +25,7 @@ class MemosAPIView(APIView):
         memo = get_object_or_404(Memo, passkey=passkey)
 
         # シリアライズしてレスポンスを返す
-        return Response(MemoSerializer(memo).data, status=status.HTTP_200_OK)
+        return Response(MemoSerializer(memo, context={"request": request}).data, status=status.HTTP_200_OK)
 
 
 class DeleteExpiredMemosAPIView(APIView):
@@ -43,7 +43,7 @@ class DeleteExpiredMemosAPIView(APIView):
 class MemoRetrieveDestroyAPIView(APIView):
     def get(self, request, pk, *args, **kwargs):
         memo = get_object_or_404(Memo, pk=pk)
-        serializer = MemoSerializer(memo)
+        serializer = MemoSerializer(memo, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, *args, **kwargs):
@@ -54,7 +54,7 @@ class MemoRetrieveDestroyAPIView(APIView):
 
 class MemoCreateAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = MemoSerializer(data=request.data)
+        serializer = MemoSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
