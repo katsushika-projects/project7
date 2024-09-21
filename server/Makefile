@@ -1,10 +1,10 @@
 .PHONY: dev-build
 dev-build:
-	docker compose -f compose-dev.yaml build
+	docker compose -f compose-dev.yml build
 
 .PHONY: dev-up-d
 dev-up-d:
-	docker compose -f compose-dev.yaml up -d
+	docker compose -f compose-dev.yml up -d
 
 .PHONY: dev
 dev:
@@ -13,15 +13,15 @@ dev:
 
 .PHONY: down
 down:
-	docker compose -f compose-dev.yaml down
+	docker compose -f compose-dev.yml down
 
 .PHONY: bash
 bash:
-	docker compose -f compose-dev.yaml exec django bash
+	docker compose -f compose-dev.yml exec django bash
 
 .PHONY: logs
 logs:
-	docker compose -f compose-dev.yaml logs
+	docker compose -f compose-dev.yml logs
 
 .PHONY: test
 test:
@@ -45,3 +45,16 @@ lint:
 	@make black
 	@make isort
 	@make flake8
+
+.PHONY: prod-build
+prod-build:
+	docker compose -f compose-prod.yml build --no-cache
+
+.PHONY: prod-up-d
+prod-up-d:
+	docker compose -f compose-prod.yml up -d
+
+.PHONY: prod
+prod:
+	@make prod-build
+	@make prod-up-d
