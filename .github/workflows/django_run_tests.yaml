@@ -26,6 +26,7 @@ jobs:
       - name: Copy env file
         run: |
           cp .env.dev .env
+          source .env
         working-directory: ./server
 
       - name: Run Tests
