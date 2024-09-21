@@ -26,10 +26,11 @@ jobs:
       - name: Copy env file
         run: |
           cp .env.dev .env
-          source .env
         working-directory: ./server
 
       - name: Run Tests
         run: |
+          ls -a ../
+          source .env
           python3 manage.py test
         working-directory: ./server/django
