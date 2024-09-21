@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="django-insecure-secret-key")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 
 
 # Application definition
@@ -85,12 +85,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": env("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": env("DB_NAME", default=""),
-        "USER": env("DB_USER", default=""),
-        "PASSWORD": env("POSTGRES_PASSWORD", default=""),
-        "HOST": env("DB_HOST", default=""),
-        "PORT": env("DB_PORT", default=""),
+        "ENGINE": env("DB_ENGINE"),
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("POSTGRES_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
 
@@ -129,13 +129,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = env.str("DJANGO_STATIC_URL", default="static/")  # 静的ファイルにブラウザでアクセスする際に使用するURL
-STATIC_ROOT = env.str(
-    "DJANGO_STATIC_ROOT", default=BASE_DIR / "static"
-)  # 静的ファイルが実際に保存される場所 collectstaticコマンドで集められる場所
+STATIC_URL = env.str("DJANGO_STATIC_URL")  # 静的ファイルにブラウザでアクセスする際に使用するURL
+STATIC_ROOT = env.str("DJANGO_STATIC_ROOT")  # 静的ファイルが実際に保存される場所 collectstaticコマンドで集められる場所
 
-MEDIA_URL = env.str("DJANGO_MEDIA_URL", default="media/")  # メディアファイルにブラウザでアクセスする際に使用するURL
-MEDIA_ROOT = env.str("DJANGO_MEDIA_ROOT", default=BASE_DIR / "media")  # メディアファイルが実際に保存される場所
+MEDIA_URL = env.str("DJANGO_MEDIA_URL")  # メディアファイルにブラウザでアクセスする際に使用するURL
+MEDIA_ROOT = env.str("DJANGO_MEDIA_ROOT")  # メディアファイルが実際に保存される場所
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
