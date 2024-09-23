@@ -113,7 +113,7 @@ paths:
               example:
                 memo:
                   - この項目は空にできません。
-  /memos/detele_expired_memos:
+  /memos/delete_expired_memos:
     delete:
       tags: [メモ]
       summary: 期限切れのメモを削除する
