@@ -122,7 +122,7 @@ class MemoRetrieveDestroyAPITestCase(APITestCase):
         self.assertEqual(res.data["detail"], "No Memo matches the given query.")
 
 
-class MemoCreateAPITEestCase(APITestCase):
+class MemoCreateAPITestCase(APITestCase):
     def setUp(self):
         self.url = reverse("memos:create")
 
