@@ -71,12 +71,12 @@ export default function Home() {
         padding: "82px 79px",
         height: containerHeight,
         boxSizing: "border-box",
-        gap: "134px",
         color: "#FFFFFF",
         backgroundColor: "#333",
-        justifyContent: "center",
+        justifyContent: "space-between",
         flexDirection: flexDirection,
         whiteSpace: "nowrap",
+        gap: "20px",
       }}
     >
       <div
@@ -308,7 +308,14 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <h3 style={{ margin: "0" }}>③QRコードをスマートフォンで読み込む</h3>
         <p
           style={{
@@ -322,12 +329,10 @@ export default function Home() {
         <img
           style={{
             backgroundColor: "rgba(255, 255, 255, 0.45)",
-            width: "100%",
-            maxWidth: "300px",
-            height: "auto",
             borderRadius: "10px",
             margin: "20px 0",
             aspectRatio: "1 / 1",
+            height: "300px",
           }}
         />
         <div
