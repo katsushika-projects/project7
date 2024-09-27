@@ -76,6 +76,7 @@ export default function Home() {
         backgroundColor: "#333",
         justifyContent: "center",
         flexDirection: flexDirection,
+        whiteSpace: "nowrap",
       }}
     >
       <div
@@ -322,6 +323,7 @@ export default function Home() {
           style={{
             backgroundColor: "rgba(255, 255, 255, 0.45)",
             width: "100%",
+            maxWidth: "300px",
             height: "auto",
             borderRadius: "10px",
             margin: "20px 0",
