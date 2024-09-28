@@ -112,10 +112,10 @@ export default function Home() {
           },
         }
       );
+      console.log(response.data.id);
 
       if (response.status === 201) {
         const responseData = response.data;
-        console.log(responseData);
         setData(responseData); // レスポンスデータを保存
       } else {
         console.error("失敗:", response.statusText);
@@ -129,26 +129,24 @@ export default function Home() {
   const handleCodePost = async () => {
     const passkey = code.join(""); // 6文字のコードを文字列に変換
     try {
-      const response = await axios.post(
-        "https://project7.uni-bo.net/memos/",
-        {
-          passkey: passkey,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+      if (!query) {
+        const response = await axios.post(
+          "https://project7.uni-bo.net/memos/",
+          {
+            passkey: passkey,
           },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.status === 200) {
+          const responseData = response.data;
+          setTextareaValue(responseData.memo);
+        } else {
+          setError(true);
         }
-      );
-
-      if (response.status === 200) {
-        const responseData = response.data;
-        console.log(responseData);
-        setTextareaValue(responseData.memo);
-        const passkeyArray = responseData.passkey.split("").slice(0, 6); // Ensure it's a 6-character string
-        setCode(passkeyArray);
-      } else {
-        setError(true);
       }
     } catch (error) {
       console.error("エラー:", error);
@@ -165,8 +163,9 @@ export default function Home() {
 
       if (response.status === 200) {
         const responseData = response.data;
-        console.log(responseData);
         setTextareaValue(responseData.memo);
+        const passkeyArray = responseData.passkey.split("").slice(0, 6); // Ensure it's a 6-character string
+        setCode(passkeyArray);
       } else {
         console.error("失敗:", response.statusText);
       }
@@ -468,7 +467,7 @@ export default function Home() {
               borderRadius: "10px",
               margin: "20px 0",
               aspectRatio: "1 / 1",
-              height: props ? "280px" : "300px",
+              height: props ? "280px" : "200px",
             }}
           />
         ) : (
