@@ -375,7 +375,7 @@ export default function Home() {
               </button>
             )}
           </div>
-          {isConfirmed && (
+          {isConfirmed && !code ? (
             <div
               style={{
                 display: "flex",
@@ -407,6 +407,8 @@ export default function Home() {
                 リセット
               </button>
             </div>
+          ) : (
+            ""
           )}
         </div>
       </div>
