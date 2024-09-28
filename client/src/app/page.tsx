@@ -94,7 +94,7 @@ export default function Home() {
       setIsCoppied(true);
       setTimeout(() => {
         setIsCoppied(false);
-      }, 3000); // 3秒後に元に戻る
+      }, 1000); // 1秒後に元に戻る
     });
   };
 
