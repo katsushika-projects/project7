@@ -24,8 +24,6 @@ yarn storybook
 
 ## 使用ライブラリ
 
-CSS スタイリング: Tailwind CSS
-
 ## ディレクトリ構成
 
 ```
