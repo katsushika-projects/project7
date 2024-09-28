@@ -17,10 +17,11 @@ export default function Home() {
   const [textareaValue, setTextareaValue] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isCodeEntered, setIsCodeEntered] = useState(false);
-  const [flexDirection, setFlexDirection] = useState<"row" | "column">("row");
-  const [containerHeight, setContainerHeight] = useState<string>("100vh");
   const [data, setData] = useState<Data | null>(null); // レスポンスデータを保存するステート
+  const [props, setProps] = useState<boolean>(true);
   const [query, setQuery] = useState<string | null>(null);
+  const [error, setError] = useState<boolean>(false);
+  const [isCoppied, setIsCoppied] = useState(false);
 
   // クエリパラメータの取得
   useEffect(() => {
@@ -57,11 +58,9 @@ export default function Home() {
   useEffect(() => {
     const updateFlexDirection = () => {
       if (window.innerWidth <= 940) {
-        setFlexDirection("column");
-        setContainerHeight("auto");
+        setProps(true);
       } else {
-        setFlexDirection("row");
-        setContainerHeight("100vh");
+        setProps(false);
       }
     };
 
@@ -82,14 +81,21 @@ export default function Home() {
     const isSixDigits = code.every((digit) => digit !== "");
     setIsCodeEntered(isSixDigits);
 
-    if (isSixDigits) {
+    if (isSixDigits && !isConfirmed) {
       handleCodePost(); // 6文字が入力されたらリクエストを送る
+    } else {
+      setError(false); // 1文字でも削除されたらエラーステートをfalseに
     }
   }, [code]);
 
   // コピーボタンの機能実装
   const handleCopy = () => {
-    navigator.clipboard.writeText(textareaValue).then(() => {});
+    navigator.clipboard.writeText(textareaValue).then(() => {
+      setIsCoppied(true);
+      setTimeout(() => {
+        setIsCoppied(false);
+      }, 3000); // 3秒後に元に戻る
+    });
   };
 
   // 確認ボタン押下でPOSTリクエストを送信
@@ -139,11 +145,14 @@ export default function Home() {
         const responseData = response.data;
         console.log(responseData);
         setTextareaValue(responseData.memo);
+        const passkeyArray = responseData.passkey.split("").slice(0, 6); // Ensure it's a 6-character string
+        setCode(passkeyArray);
       } else {
-        console.error("失敗:", response.statusText);
+        setError(true);
       }
     } catch (error) {
       console.error("エラー:", error);
+      setError(true);
     }
   };
 
@@ -177,14 +186,14 @@ export default function Home() {
     <div
       style={{
         display: "flex",
-        padding: "82px 79px",
-        height: containerHeight,
+        padding: props ? "32px 40px" : "82px 79px",
+        height: props ? "auto" : "100vh",
         boxSizing: "border-box",
         color: "#FFFFFF",
         backgroundColor: "#333",
         justifyContent: "center",
-        flexDirection: flexDirection,
-        whiteSpace: "nowrap",
+        flexDirection: props ? "column" : "row",
+        whiteSpace: props ? "" : "nowrap",
         gap: "134px",
       }}
     >
@@ -222,13 +231,20 @@ export default function Home() {
             <p style={{ margin: "0" }}>
               端末に表示されているコードを入力してください
             </p>
+            {error ? (
+              <p style={{ margin: "0", color: "#FF5B5B", fontSize: "14px" }}>
+                コードが違います。
+              </p>
+            ) : (
+              ""
+            )}
             <div
               style={{
                 display: "flex",
-                gap: "7px",
+                gap: props ? "5px" : "7px",
                 marginTop: "20px",
-                padding: "6px 0",
-                width: "250px",
+                padding: "6px 10px",
+                width: props ? "auto" : "250px",
                 backgroundColor: "#FFF",
                 borderRadius: "10px",
                 justifyContent: "center",
@@ -240,7 +256,7 @@ export default function Home() {
                   key={i}
                   autoFocus={i === 0}
                   value={code[i]}
-                  type="tel"
+                  type="text"
                   ref={inputRef[i]}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -289,10 +305,12 @@ export default function Home() {
               display: "flex",
               justifyContent: "space-between",
               fontSize: "12px",
+              flexDirection: props ? "column" : "row",
+              gap: props ? "10px" : "0",
             }}
           >
             <p style={{ margin: "0" }}>
-              入力後、貼り付けた内容が上記に表示されます。
+              入力後、貼り付けた内容が下記に表示されます。
             </p>
             <p style={{ margin: "0" }}>半角英数字6字</p>
           </div>
@@ -338,11 +356,12 @@ export default function Home() {
               alignItems: "center",
               gap: "10px",
               justifyContent: "flex-end",
+              flexDirection: props ? "column" : "row",
             }}
           >
             {!isCodeEntered ? (
               <>
-                <h3 style={{ margin: "0" }}>②「確定」ボタンを押す</h3>
+                <h3 style={{ margin: "0" }}>②確定ボタンを押す</h3>
                 <button
                   onClick={
                     textareaValue
@@ -375,28 +394,29 @@ export default function Home() {
                 style={{
                   padding: "9px 24px",
                   color: "#ECECEC",
-                  backgroundColor: "#FF5B5B",
+                  backgroundColor: isCoppied ? "#4cd997" : "#FF5B5B",
                   border: "none",
                   borderRadius: "10px",
                   fontWeight: "700",
                   cursor: "pointer",
                 }}
               >
-                コピーする
+                {isCoppied ? "コピっと！" : "コピーする"}
               </button>
             )}
           </div>
-          {isConfirmed && !code ? (
+          {isConfirmed && !isCodeEntered ? (
             <div
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
                 gap: "10px",
                 alignItems: "center",
+                flexDirection: props ? "column" : "row",
               }}
             >
               <p style={{ margin: "0", fontSize: "12px" }}>
-                QRコードを削除してもう一度やり直す
+                QRコードを削除してやり直す
               </p>
               <button
                 onClick={() => {
@@ -449,8 +469,7 @@ export default function Home() {
               borderRadius: "10px",
               margin: "20px 0",
               aspectRatio: "1 / 1",
-              height: "300px",
-              minHeight: "200px",
+              height: props ? "280px" : "300px",
             }}
           />
         ) : (
@@ -460,7 +479,7 @@ export default function Home() {
               borderRadius: "10px",
               margin: "20px 0",
               aspectRatio: "1 / 1",
-              height: "300px",
+              height: props ? "280px" : "300px",
             }}
           />
         )}
@@ -473,8 +492,9 @@ export default function Home() {
           }}
         >
           <p style={{ margin: "0" }}>スマートフォンでスキャン</p>
-          <p style={{ margin: "8px 0 0 0" }}>
-            または表示されているコードを入力
+          <p>または</p>
+          <p style={{ margin: "8px 0 0 0", whiteSpace: "nowrap" }}>
+            表示されているコードを入力
           </p>
         </div>
         <div
@@ -484,7 +504,7 @@ export default function Home() {
             alignItems: "center",
           }}
         >
-          <p style={{ margin: "32px 0 16px 0" }}>
+          <p style={{ margin: "32px 0 16px 0", whiteSpace: "nowrap" }}>
             次のコードを入力してください
           </p>
           <p
