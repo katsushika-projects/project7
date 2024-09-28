@@ -13,6 +13,8 @@ export default function Home() {
   const [containerHeight, setContainerHeight] = useState<string>("100vh");
   const [isCopied, setIsCopied] = useState(false); // コピーボタンのフラグ
   const [data, setData] = useState<any>(null); // レスポンスデータを保存するステート
+  const params = new URLSearchParams(window.location.search);
+  let query = params.get("id");
 
   const inputRef: any = [
     useRef(null),
@@ -106,7 +108,7 @@ export default function Home() {
     }
   };
 
-  // POSTリクエストを送信
+  // passkeyのPOSTリクエストを送信
   const handleCodePost = async () => {
     const passkey = code.join(""); // 6文字のコードを文字列に変換
     try {
@@ -133,6 +135,32 @@ export default function Home() {
       console.error("エラー:", error);
     }
   };
+
+  // QRのPOSTリクエストを送信
+  const handleQueryPost = async () => {
+    try {
+      const response = await axios.get(
+        `https://project7.uni-bo.net/memos/${query}`
+      );
+
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log(responseData);
+        setTextareaValue(responseData.memo);
+      } else {
+        console.error("失敗:", response.statusText);
+      }
+    } catch (error) {
+      console.error("エラー:", error);
+    }
+  };
+
+  //queryが存在する場合、リクエストを送る
+  useEffect(() => {
+    if (query) {
+      handleQueryPost();
+    }
+  }, [query]);
 
   return (
     <div
@@ -465,7 +493,7 @@ export default function Home() {
             {data ? data.passkey : "コピペ内容を貼り付けると表示されます"}
           </p>
         </div>
-        <p style={{ textAlign: "end" }}>※有効期限は15分です</p>
+        <p style={{ marginBottom: "0" }}>※有効期限は15分です</p>
       </div>
     </div>
   );
