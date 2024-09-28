@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import axios from "axios"; // axiosのインポート
+import axios from "axios";
 
 export default function Home() {
   const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
