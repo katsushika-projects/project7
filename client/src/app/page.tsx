@@ -112,6 +112,7 @@ export default function Home() {
           },
         }
       );
+      console.log(response.data.id);
 
       if (response.status === 201) {
         const responseData = response.data;
@@ -140,13 +141,9 @@ export default function Home() {
           },
         }
       );
-
       if (response.status === 200) {
         const responseData = response.data;
-        console.log(responseData);
         setTextareaValue(responseData.memo);
-        const passkeyArray = responseData.passkey.split("").slice(0, 6); // Ensure it's a 6-character string
-        setCode(passkeyArray);
       } else {
         setError(true);
       }
@@ -165,8 +162,9 @@ export default function Home() {
 
       if (response.status === 200) {
         const responseData = response.data;
-        console.log(responseData);
         setTextareaValue(responseData.memo);
+        const passkeyArray = responseData.passkey.split("").slice(0, 6); // Ensure it's a 6-character string
+        setCode(passkeyArray);
       } else {
         console.error("失敗:", response.statusText);
       }
@@ -358,7 +356,7 @@ export default function Home() {
               flexDirection: props ? "column" : "row",
             }}
           >
-            {!isCodeEntered ? (
+            {!isCodeEntered || !query ? (
               <>
                 <h3 style={{ margin: "0" }}>②確定ボタンを押す</h3>
                 <button
@@ -468,7 +466,7 @@ export default function Home() {
               borderRadius: "10px",
               margin: "20px 0",
               aspectRatio: "1 / 1",
-              height: props ? "280px" : "300px",
+              height: props ? "280px" : "200px",
             }}
           />
         ) : (
