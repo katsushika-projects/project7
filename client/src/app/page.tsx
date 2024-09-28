@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 
 export default function Home() {
   const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
@@ -10,6 +11,10 @@ export default function Home() {
   const [isCodeEntered, setIsCodeEntered] = useState(false);
   const [flexDirection, setFlexDirection] = useState<"row" | "column">("row");
   const [containerHeight, setContainerHeight] = useState<string>("100vh");
+  const [isCopied, setIsCopied] = useState(false); // コピーボタンのフラグ
+  const [data, setData] = useState<any>(null); // レスポンスデータを保存するステート
+  const params = new URLSearchParams(window.location.search);
+  let query = params.get("id");
 
   const inputRef: any = [
     useRef(null),
@@ -62,7 +67,100 @@ export default function Home() {
     // コードが6桁入力されたか確認
     const isSixDigits = code.every((digit) => digit !== "");
     setIsCodeEntered(isSixDigits);
+
+    if (isSixDigits) {
+      handleCodePost(); // 6文字が入力されたらリクエストを送る
+    }
   }, [code]);
+
+  // コピーボタンの機能実装
+  const handleCopy = () => {
+    navigator.clipboard.writeText(textareaValue).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // 2秒後にフラグをリセット
+    });
+  };
+
+  // 確認ボタン押下でPOSTリクエストを送信
+  const handleConfirm = async () => {
+    try {
+      const response = await axios.post(
+        "https://project7.uni-bo.net/memos/create/",
+        {
+          memo: textareaValue,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        const responseData = response.data;
+        console.log(responseData);
+        setData(responseData); // レスポンスデータを保存
+      } else {
+        console.error("失敗:", response.statusText);
+      }
+    } catch (error) {
+      console.error("エラー:", error);
+    }
+  };
+
+  // passkeyのPOSTリクエストを送信
+  const handleCodePost = async () => {
+    const passkey = code.join(""); // 6文字のコードを文字列に変換
+    try {
+      const response = await axios.post(
+        "https://project7.uni-bo.net/memos/",
+        {
+          passkey: passkey,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log(responseData);
+        setTextareaValue(responseData.memo);
+      } else {
+        console.error("失敗:", response.statusText);
+      }
+    } catch (error) {
+      console.error("エラー:", error);
+    }
+  };
+
+  // QRのPOSTリクエストを送信
+  const handleQueryPost = async () => {
+    try {
+      const response = await axios.get(
+        `https://project7.uni-bo.net/memos/${query}`
+      );
+
+      if (response.status === 200) {
+        const responseData = response.data;
+        console.log(responseData);
+        setTextareaValue(responseData.memo);
+      } else {
+        console.error("失敗:", response.statusText);
+      }
+    } catch (error) {
+      console.error("エラー:", error);
+    }
+  };
+
+  //queryが存在する場合、リクエストを送る
+  useEffect(() => {
+    if (query) {
+      handleQueryPost();
+    }
+  }, [query]);
 
   return (
     <div
@@ -73,10 +171,10 @@ export default function Home() {
         boxSizing: "border-box",
         color: "#FFFFFF",
         backgroundColor: "#333",
-        justifyContent: "space-between",
+        justifyContent: "center",
         flexDirection: flexDirection,
         whiteSpace: "nowrap",
-        gap: "20px",
+        gap: "134px",
       }}
     >
       <div
@@ -239,6 +337,7 @@ export default function Home() {
                     textareaValue
                       ? () => {
                           setIsConfirmed(true);
+                          handleConfirm();
                         }
                       : undefined
                   }
@@ -261,6 +360,7 @@ export default function Home() {
               </>
             ) : (
               <button
+                onClick={handleCopy}
                 style={{
                   padding: "9px 24px",
                   color: "#ECECEC",
@@ -275,7 +375,7 @@ export default function Home() {
               </button>
             )}
           </div>
-          {isConfirmed && (
+          {isConfirmed && !code ? (
             <div
               style={{
                 display: "flex",
@@ -291,6 +391,8 @@ export default function Home() {
                 onClick={() => {
                   setTextareaValue("");
                   setIsConfirmed(false);
+                  setData(null);
+                  setCode(["", "", "", "", "", ""]);
                 }}
                 style={{
                   padding: "6px 21px",
@@ -305,6 +407,8 @@ export default function Home() {
                 リセット
               </button>
             </div>
+          ) : (
+            ""
           )}
         </div>
       </div>
@@ -326,15 +430,29 @@ export default function Home() {
         >
           コピペ内容を貼り付けるとQRコードが表示されます。
         </p>
-        <img
-          style={{
-            backgroundColor: "rgba(255, 255, 255, 0.45)",
-            borderRadius: "10px",
-            margin: "20px 0",
-            aspectRatio: "1 / 1",
-            height: "300px",
-          }}
-        />
+        {data ? (
+          <img
+            src={data?.qr_img} // qr_imgをimgのsrcに設定
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.45)",
+              borderRadius: "10px",
+              margin: "20px 0",
+              aspectRatio: "1 / 1",
+              height: "300px",
+              minHeight: "200px",
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.45)",
+              borderRadius: "10px",
+              margin: "20px 0",
+              aspectRatio: "1 / 1",
+              height: "300px",
+            }}
+          />
+        )}
         <div
           style={{
             display: "flex",
@@ -360,9 +478,8 @@ export default function Home() {
           </p>
           <p
             style={{
-              color: "#7D7D7D",
+              color: data ? "#333" : "#7D7D7D",
               backgroundColor: "#FFF",
-              fontSize: "12px",
               justifyContent: "center",
               alignItems: "center",
               height: "51px",
@@ -371,12 +488,14 @@ export default function Home() {
               fontWeight: "700",
               width: "100%",
               margin: "0",
+              fontSize: data ? "24px" : "12px",
+              padding: "0 10px",
             }}
           >
-            コピペ内容を貼り付けると表示されます
+            {data ? data.passkey : "コピペ内容を貼り付けると表示されます"}
           </p>
         </div>
-        <p style={{ textAlign: "end" }}>※有効期限は15分です</p>
+        <p style={{ marginBottom: "0" }}>※有効期限は15分です</p>
       </div>
     </div>
   );
