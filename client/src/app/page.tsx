@@ -13,8 +13,15 @@ export default function Home() {
   const [containerHeight, setContainerHeight] = useState<string>("100vh");
   const [isCopied, setIsCopied] = useState(false); // コピーボタンのフラグ
   const [data, setData] = useState<any>(null); // レスポンスデータを保存するステート
-  const params = new URLSearchParams(window.location.search);
-  let query = params.get("id");
+  const [query, setQuery] = useState<string | null>(null);
+
+  // クエリパラメータの取得
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setQuery(params.get("id"));
+    }
+  }, []);
 
   const inputRef: any = [
     useRef(null),
@@ -186,11 +193,11 @@ export default function Home() {
       >
         <div>
           <h1 style={{ margin: "0", fontWeight: "400", fontSize: "28px" }}>
-            Windows←→iPhone
+            PC←→スマホ
             <br />
-            Mac←→Android
+            ログイン不要で
             <br />
-            間で自由にコピペができます
+            自由にコピペができます
           </h1>
         </div>
         <div>

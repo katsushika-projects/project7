@@ -1,6 +1,10 @@
-"use client";
-
-import { BrowserRouter } from "react-router-dom";
+export const metadata = {
+  title: "コピっと！", // タブネームをここで設定
+  description: "PC スマホ ログイン不要で自由にコピペができます",
+  icons: {
+    icon: "/assets/icon.ico", // ファビコンを指定
+  },
+};
 
 export default function RootLayout({
   children,
@@ -9,9 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <BrowserRouter>
-        <body style={{ margin: "0" }}>{children}</body>
-      </BrowserRouter>
+      <body style={{ margin: "0" }}>{children}</body>
     </html>
   );
 }
