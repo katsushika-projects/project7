@@ -1,5 +1,6 @@
 from django.conf import settings
 
+
 def get_frontend_url(memo_id):
     """
     フロントエンドのページのURLを返す関数
