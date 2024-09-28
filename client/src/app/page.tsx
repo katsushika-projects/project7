@@ -19,7 +19,6 @@ export default function Home() {
   const [isCodeEntered, setIsCodeEntered] = useState(false);
   const [data, setData] = useState<Data | null>(null); // レスポンスデータを保存するステート
   const [props, setProps] = useState<boolean>(true);
-  const [props, setProps] = useState<boolean>(true);
   const [query, setQuery] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isCoppied, setIsCoppied] = useState(false);
