@@ -116,7 +116,6 @@ export default function Home() {
 
       if (response.status === 201) {
         const responseData = response.data;
-        console.log(responseData);
         setData(responseData); // レスポンスデータを保存
       } else {
         console.error("失敗:", response.statusText);
@@ -130,22 +129,24 @@ export default function Home() {
   const handleCodePost = async () => {
     const passkey = code.join(""); // 6文字のコードを文字列に変換
     try {
-      const response = await axios.post(
-        "https://project7.uni-bo.net/memos/",
-        {
-          passkey: passkey,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+      if (!query) {
+        const response = await axios.post(
+          "https://project7.uni-bo.net/memos/",
+          {
+            passkey: passkey,
           },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.status === 200) {
+          const responseData = response.data;
+          setTextareaValue(responseData.memo);
+        } else {
+          setError(true);
         }
-      );
-      if (response.status === 200) {
-        const responseData = response.data;
-        setTextareaValue(responseData.memo);
-      } else {
-        setError(true);
       }
     } catch (error) {
       console.error("エラー:", error);
@@ -356,7 +357,7 @@ export default function Home() {
               flexDirection: props ? "column" : "row",
             }}
           >
-            {!isCodeEntered || !query ? (
+            {!isCodeEntered ? (
               <>
                 <h3 style={{ margin: "0" }}>②確定ボタンを押す</h3>
                 <button
