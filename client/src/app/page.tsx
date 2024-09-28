@@ -21,6 +21,7 @@ export default function Home() {
   const [props, setProps] = useState<boolean>(true);
   const [query, setQuery] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
+  const [isCoppied, setIsCoppied] = useState(false);
 
   // クエリパラメータの取得
   useEffect(() => {
@@ -80,7 +81,7 @@ export default function Home() {
     const isSixDigits = code.every((digit) => digit !== "");
     setIsCodeEntered(isSixDigits);
 
-    if (isSixDigits) {
+    if (isSixDigits && !isConfirmed) {
       handleCodePost(); // 6文字が入力されたらリクエストを送る
     } else {
       setError(false); // 1文字でも削除されたらエラーステートをfalseに
@@ -89,7 +90,12 @@ export default function Home() {
 
   // コピーボタンの機能実装
   const handleCopy = () => {
-    navigator.clipboard.writeText(textareaValue).then(() => {});
+    navigator.clipboard.writeText(textareaValue).then(() => {
+      setIsCoppied(true);
+      setTimeout(() => {
+        setIsCoppied(false);
+      }, 3000); // 3秒後に元に戻る
+    });
   };
 
   // 確認ボタン押下でPOSTリクエストを送信
@@ -180,7 +186,7 @@ export default function Home() {
     <div
       style={{
         display: "flex",
-        padding: "82px 79px",
+        padding: props ? "32px 40px" : "82px 79px",
         height: props ? "auto" : "100vh",
         boxSizing: "border-box",
         color: "#FFFFFF",
@@ -237,9 +243,8 @@ export default function Home() {
                 display: "flex",
                 gap: props ? "5px" : "7px",
                 marginTop: "20px",
-                padding: "6px 0",
-                width: props ? "180px" : "250px",
-                backgroundColor: "#FFF",
+                padding: "6px 10px",
+                width: props ? "auto" : "250px",
                 borderRadius: "10px",
                 justifyContent: "center",
               }}
@@ -250,7 +255,7 @@ export default function Home() {
                   key={i}
                   autoFocus={i === 0}
                   value={code[i]}
-                  type="tel"
+                  type="text"
                   ref={inputRef[i]}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -287,7 +292,7 @@ export default function Home() {
                     textAlign: "center",
                     fontSize: "20px",
                     border: "none",
-                    borderBottom: "2px solid #000", // 下線を表示
+                    borderRadius: "5px",
                     outline: "none",
                   }}
                 />
@@ -304,7 +309,7 @@ export default function Home() {
             }}
           >
             <p style={{ margin: "0" }}>
-              入力後、貼り付けた内容が上記に表示されます。
+              入力後、貼り付けた内容が下記に表示されます。
             </p>
             <p style={{ margin: "0" }}>半角英数字6字</p>
           </div>
@@ -388,14 +393,14 @@ export default function Home() {
                 style={{
                   padding: "9px 24px",
                   color: "#ECECEC",
-                  backgroundColor: "#FF5B5B",
+                  backgroundColor: isCoppied ? "#4cd997" : "#FF5B5B",
                   border: "none",
                   borderRadius: "10px",
                   fontWeight: "700",
                   cursor: "pointer",
                 }}
               >
-                コピーする
+                {isCoppied ? "コピっと！" : "コピーする"}
               </button>
             )}
           </div>
@@ -463,8 +468,7 @@ export default function Home() {
               borderRadius: "10px",
               margin: "20px 0",
               aspectRatio: "1 / 1",
-              height: "300px",
-              minHeight: "200px",
+              height: props ? "280px" : "300px",
             }}
           />
         ) : (
@@ -474,7 +478,7 @@ export default function Home() {
               borderRadius: "10px",
               margin: "20px 0",
               aspectRatio: "1 / 1",
-              height: "300px",
+              height: props ? "280px" : "300px",
             }}
           />
         )}
