@@ -204,13 +204,22 @@ export default function Home() {
         }}
       >
         <div>
-          <h1 style={{ margin: "0", fontWeight: "400", fontSize: "28px" }}>
+          <a
+            href="https://www.copitto.com/"
+            style={{
+              margin: "0",
+              fontWeight: "400",
+              fontSize: "28px",
+              color: "white",
+              textDecoration: "none",
+            }}
+          >
             PC←→スマホ
             <br />
             ログイン不要で
             <br />
             自由にコピペができます
-          </h1>
+          </a>
         </div>
         <div>
           <p style={{ margin: "0", paddingTop: "20px" }}>
