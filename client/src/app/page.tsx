@@ -3,6 +3,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
+interface Data {
+  id: string;
+  memo: string;
+  qr_img: string;
+  passkey: string;
+  created_at: string;
+}
+
 export default function Home() {
   const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
   const [inputIndex, setIndex] = useState(0);
@@ -11,8 +19,7 @@ export default function Home() {
   const [isCodeEntered, setIsCodeEntered] = useState(false);
   const [flexDirection, setFlexDirection] = useState<"row" | "column">("row");
   const [containerHeight, setContainerHeight] = useState<string>("100vh");
-  const [isCopied, setIsCopied] = useState(false); // コピーボタンのフラグ
-  const [data, setData] = useState<any>(null); // レスポンスデータを保存するステート
+  const [data, setData] = useState<Data | null>(null); // レスポンスデータを保存するステート
   const [query, setQuery] = useState<string | null>(null);
 
   // クエリパラメータの取得
@@ -23,18 +30,18 @@ export default function Home() {
     }
   }, []);
 
-  const inputRef: any = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
+  const inputRef: React.RefObject<HTMLInputElement>[] = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
   ];
 
-  const bsFunction = (event: any) => {
+  const bsFunction = (event: KeyboardEvent) => {
     if (event.key === "Backspace" && inputIndex > 0) {
-      inputRef[inputIndex - 1].current.focus();
+      inputRef[inputIndex - 1].current?.focus();
       setIndex(inputIndex - 1);
     }
   };
@@ -82,10 +89,7 @@ export default function Home() {
 
   // コピーボタンの機能実装
   const handleCopy = () => {
-    navigator.clipboard.writeText(textareaValue).then(() => {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000); // 2秒後にフラグをリセット
-    });
+    navigator.clipboard.writeText(textareaValue).then(() => {});
   };
 
   // 確認ボタン押下でPOSTリクエストを送信
@@ -256,14 +260,14 @@ export default function Home() {
 
                     // 最後の入力欄では次のインプットにフォーカスを移さない
                     if (value !== "" && i < 5) {
-                      inputRef[i + 1]?.current.focus();
+                      inputRef[i + 1]?.current?.focus();
                     }
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Backspace" && code[i] === "") {
                       // 現在のinputが空でbackspaceキーが押された場合、前のinputに移動
                       if (i > 0) {
-                        inputRef[i - 1]?.current.focus();
+                        (inputRef[i - 1]?.current as HTMLInputElement)?.focus();
                       }
                     }
                   }}
