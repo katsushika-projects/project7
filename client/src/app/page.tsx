@@ -245,7 +245,6 @@ export default function Home() {
                 marginTop: "20px",
                 padding: "6px 10px",
                 width: props ? "auto" : "250px",
-                backgroundColor: "#FFF",
                 borderRadius: "10px",
                 justifyContent: "center",
               }}
@@ -293,7 +292,7 @@ export default function Home() {
                     textAlign: "center",
                     fontSize: "20px",
                     border: "none",
-                    borderBottom: "2px solid #000", // 下線を表示
+                    borderRadius: "5px",
                     outline: "none",
                   }}
                 />
