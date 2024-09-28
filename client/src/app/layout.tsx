@@ -1,8 +1,8 @@
 export const metadata = {
-  title: "コピっと！", // タブネームをここで設定
+  title: "コピっと！",
   description: "PC スマホ ログイン不要で自由にコピペができます",
   icons: {
-    icon: "/assets/icon.ico", // ファビコンを指定
+    icon: "/assets/icon.ico",
   },
 };
 
