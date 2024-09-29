@@ -22,6 +22,7 @@ export default function Home() {
   const [query, setQuery] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isCoppied, setIsCoppied] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
 
   // クエリパラメータの取得
   useEffect(() => {
@@ -274,41 +275,36 @@ export default function Home() {
                   type="text"
                   ref={inputRef[i]}
                   onCompositionStart={() => {
-                    const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `onCompositionStart 場所${i} <br />`; // Debug用
-                  }}
-                  onCompositionUpdate={() => {
-                    const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `onCompositionUpdate 場所${i} <br />`; // Debug用
+                    setIsComposing(true);
+                    const debug = document.getElementById("debug")!;
+                    debug.innerHTML += `onCompositionStart 場所${i} <br />`;
                   }}
                   onCompositionEnd={() => {
-                    const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `onCompositionEnd 場所${i} <br />`; // Debug用
+                    setIsComposing(false);
+                    const debug = document.getElementById("debug")!;
+                    debug.innerHTML += `onCompositionEnd 場所${i} <br />`;
+                  }}
+                  onBlur={() => {
+                    setIsComposing(false); // フォーカスが外れた時もisComposingをリセット
+                    const debug = document.getElementById("debug")!;
+                    debug.innerHTML += `onBlur 場所${i} <br />`;
                   }}
                   onChange={(e) => {
-                    const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `onChange 押した文字${e.target.value} 場所${i} <br />`; // Debug用
+                    const debug = document.getElementById("debug")!;
+                    debug.innerHTML += `onChange 押した文字${e.target.value} 場所${i} ${isComposing}<br />`;
+
+                    if (isComposing) return;
 
                     const value = e.target.value;
 
-                    // 入力が1文字でない場合には、処理をスキップ
                     if (value.length > 1) return;
 
                     const codeArray = [...code];
                     codeArray[i] = value;
                     setCode(codeArray);
 
-                    // 最後の入力欄では次のインプットにフォーカスを移さない
                     if (value !== "" && i < 5) {
                       inputRef[i + 1]?.current?.focus();
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Backspace" && code[i] === "") {
-                      // 現在のinputが空でbackspaceキーが押された場合、前のinputに移動
-                      if (i > 0) {
-                        (inputRef[i - 1]?.current as HTMLInputElement)?.focus();
-                      }
                     }
                   }}
                   style={{
