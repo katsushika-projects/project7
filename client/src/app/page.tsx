@@ -102,7 +102,7 @@ export default function Home() {
   const handleConfirm = async () => {
     try {
       const response = await axios.post(
-        "https://project7.uni-bo.net/memos/create/",
+        "https://katsushika-project.net/memos/create/",
         {
           memo: textareaValue,
         },
@@ -131,7 +131,7 @@ export default function Home() {
     try {
       if (!query) {
         const response = await axios.post(
-          "https://project7.uni-bo.net/memos/",
+          "https://katsushika-project.net/memos/",
           {
             passkey: passkey,
           },
@@ -158,7 +158,7 @@ export default function Home() {
   const handleQueryPost = async () => {
     try {
       const response = await axios.get(
-        `https://project7.uni-bo.net/memos/${query}`
+        `https://katsushika-project.net/${query}`
       );
 
       if (response.status === 200) {
@@ -222,13 +222,6 @@ export default function Home() {
           </a>
         </div>
 
-        {/* debug用 */}
-
-        <div id="debug">
-          debug list v0.0.2
-          <br />
-        </div>
-
         <div>
           <p style={{ margin: "0", paddingTop: "20px" }}>
             コピペ内容を貼り付けて、端末にコードが表示されている方↓
@@ -278,17 +271,6 @@ export default function Home() {
                   spellCheck="false"
                   ref={inputRef[i]}
                   onChange={(e) => {
-                    // ExtendedInputEvent 型を定義
-                    interface ExtendedInputEvent extends InputEvent {
-                      isComposing: boolean;
-                    }
-                    const isComposing = (e.nativeEvent as ExtendedInputEvent)
-                      .isComposing;
-                    const debug = document.getElementById("debug");
-                    if (debug) {
-                      debug.innerHTML += `isComposing: ${isComposing}<br>`;
-                    }
-
                     const value = e.target.value;
 
                     // 入力が1文字でない場合には、処理をスキップ
