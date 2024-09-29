@@ -132,7 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-USE_S3_FOR_STATIC = os.getenv("USE_S3_FOR_STATIC", "False") == "True"
+USE_S3_FOR_STATIC = env.bool("USE_S3_FOR_STATIC", False) is True
 
 if USE_S3_FOR_STATIC:
     INSTALLED_APPS += ["storages"]
