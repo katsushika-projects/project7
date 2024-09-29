@@ -270,9 +270,17 @@ export default function Home() {
                   value={code[i]}
                   type="text"
                   ref={inputRef[i]}
+                  onCompositionStart={() => {
+                    const debug = document.getElementById("debug")!; // Debug用
+                    debug.innerHTML += `composition start 場所${i} <br />`; // Debug用
+                  }}
+                  onCompositionEnd={() => {
+                    const debug = document.getElementById("debug")!; // Debug用
+                    debug.innerHTML += `composition end 場所${i} <br />`; // Debug用
+                  }}
                   onChange={(e) => {
                     const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `押した文字${e.target.value} 場所${i}`; // Debug用
+                    debug.innerHTML += `押した文字${e.target.value} 場所${i} <br />`; // Debug用
 
                     const value = e.target.value;
 
