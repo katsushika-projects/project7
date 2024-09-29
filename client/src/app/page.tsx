@@ -270,11 +270,11 @@ export default function Home() {
                   value={code[i]}
                   type="text"
                   ref={inputRef[i]}
-                  onCompositionStart={(e) => {
+                  onCompositionStart={() => {
                     const debug = document.getElementById("debug")!; // Debug用
                     debug.innerHTML += `composition start 場所${i} <br />`; // Debug用
                   }}
-                  onCompositionEnd={(e) => {
+                  onCompositionEnd={() => {
                     const debug = document.getElementById("debug")!; // Debug用
                     debug.innerHTML += `composition end 場所${i} <br />`; // Debug用
                   }}
