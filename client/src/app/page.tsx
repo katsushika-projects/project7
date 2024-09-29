@@ -275,17 +275,11 @@ export default function Home() {
                   type="text"
                   ref={inputRef[i]}
                   onCompositionStart={() => {
-                    setIsComposing(true);
                     const debug = document.getElementById("debug")!;
                     debug.innerHTML += `onCompositionStart 場所${i} <br />`;
                   }}
-                  onCompositionEnd={() => {
-                    setIsComposing(false);
-                    const debug = document.getElementById("debug")!;
-                    debug.innerHTML += `onCompositionEnd 場所${i} <br />`;
-                  }}
                   onBlur={() => {
-                    setIsComposing(false); // フォーカスが外れた時もisComposingをリセット
+                    setIsComposing(true); // フォーカスが外れた時もisComposingをリセット
                     const debug = document.getElementById("debug")!;
                     debug.innerHTML += `onBlur 場所${i} <br />`;
                   }}
@@ -293,7 +287,10 @@ export default function Home() {
                     const debug = document.getElementById("debug")!;
                     debug.innerHTML += `onChange 押した文字${e.target.value} 場所${i} ${isComposing}<br />`;
 
-                    // if (isComposing) return;
+                    if (isComposing) {
+                      setIsComposing(false);
+                      return;
+                    }
 
                     const value = e.target.value;
 
