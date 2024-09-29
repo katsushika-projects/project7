@@ -52,7 +52,7 @@ export default function Home() {
     return () => {
       document.removeEventListener("keydown", bsFunction, false);
     };
-  }, [bsFunction]);
+  }, []);
 
   // ウィンドウのサイズに応じてflexDirectionを変更
   useEffect(() => {
@@ -221,6 +221,11 @@ export default function Home() {
             自由にコピペができます
           </a>
         </div>
+
+        {/* debug用 */}
+
+        <div id="debug">aaaa</div>
+
         <div>
           <p style={{ margin: "0", paddingTop: "20px" }}>
             コピペ内容を貼り付けて、端末にコードが表示されている方↓
@@ -266,20 +271,17 @@ export default function Home() {
                   type="text"
                   ref={inputRef[i]}
                   onChange={(e) => {
+                    const debug = document.getElementById("debug")!; // Debug用
+                    debug.innerHTML += `押した文字${e.target.value} 場所${i}`; // Debug用
+
                     const value = e.target.value;
 
                     // 入力が1文字でない場合には、処理をスキップ
                     if (value.length > 1) return;
 
-                    const codeArray = [
-                      i !== 0 ? code[0] : value,
-                      i !== 1 ? code[1] : value,
-                      i !== 2 ? code[2] : value,
-                      i !== 3 ? code[3] : value,
-                      i !== 4 ? code[4] : value,
-                      i !== 5 ? code[5] : value,
-                    ];
-                    setCode([...codeArray]);
+                    const codeArray = [...code];
+                    codeArray[i] = value;
+                    setCode(codeArray);
 
                     // 最後の入力欄では次のインプットにフォーカスを移さない
                     if (value !== "" && i < 5) {
