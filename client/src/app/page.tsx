@@ -225,7 +225,7 @@ export default function Home() {
         {/* debug用 */}
 
         <div id="debug">
-          debug list v0.0.1
+          debug list v0.0.2
           <br />
         </div>
 
@@ -272,8 +272,18 @@ export default function Home() {
                   autoFocus={i === 0}
                   value={code[i]}
                   type="text"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="none"
+                  spellCheck="false"
                   ref={inputRef[i]}
                   onChange={(e) => {
+                    const isComposing = (e.nativeEvent as any).isComposing;
+                    const debug = document.getElementById("debug");
+                    if (debug) {
+                      debug.innerHTML += `isComposing: ${isComposing}<br>`;
+                    }
+
                     const value = e.target.value;
 
                     // 入力が1文字でない場合には、処理をスキップ
