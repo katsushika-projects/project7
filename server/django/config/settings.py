@@ -139,11 +139,9 @@ if USE_S3_FOR_STATIC:
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
-            "location": "media",
         },
         "staticfiles": {
             "BACKEND": "storages.backends.s3.S3Storage",
-            "location": "static",
         },
     }
 
