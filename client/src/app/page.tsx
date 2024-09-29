@@ -22,7 +22,6 @@ export default function Home() {
   const [query, setQuery] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isCoppied, setIsCoppied] = useState(false);
-  const [isComposing, setIsComposing] = useState(false);
 
   // クエリパラメータの取得
   useEffect(() => {
@@ -273,25 +272,9 @@ export default function Home() {
                   autoFocus={i === 0}
                   value={code[i]}
                   type="text"
+                  inputMode="text" // スマホで英数字入力キーボードを表示
                   ref={inputRef[i]}
-                  onCompositionStart={() => {
-                    const debug = document.getElementById("debug")!;
-                    debug.innerHTML += `onCompositionStart 場所${i} <br />`;
-                  }}
-                  onBlur={() => {
-                    setIsComposing(true); // フォーカスが外れた時もisComposingをリセット
-                    const debug = document.getElementById("debug")!;
-                    debug.innerHTML += `onBlur 場所${i} <br />`;
-                  }}
                   onChange={(e) => {
-                    const debug = document.getElementById("debug")!;
-                    debug.innerHTML += `onChange 押した文字${e.target.value} 場所${i} ${isComposing}<br />`;
-
-                    if (isComposing) {
-                      setIsComposing(false);
-                      return;
-                    }
-
                     const value = e.target.value;
 
                     if (value.length > 1) return;
