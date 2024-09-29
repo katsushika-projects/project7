@@ -278,7 +278,12 @@ export default function Home() {
                   spellCheck="false"
                   ref={inputRef[i]}
                   onChange={(e) => {
-                    const isComposing = (e.nativeEvent as any).isComposing;
+                    // ExtendedInputEvent 型を定義
+                    interface ExtendedInputEvent extends InputEvent {
+                      isComposing: boolean;
+                    }
+                    const isComposing = (e.nativeEvent as ExtendedInputEvent)
+                      .isComposing;
                     const debug = document.getElementById("debug");
                     if (debug) {
                       debug.innerHTML += `isComposing: ${isComposing}<br>`;
