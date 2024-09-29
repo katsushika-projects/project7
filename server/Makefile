@@ -61,11 +61,11 @@ prod:
 
 .PHONY: prod-ec2-build
 prod-ec2-build:
-	docker compose -f compose-prod.yml build --no-cache
+	docker compose -f compose-ec2.yml build --no-cache
 
 .PHONY: prod-ec2-up-d
 prod-ec2-up-d:
-	docker compose -f compose-prod.yml up -d
+	docker compose -f compose-ec2.yml up -d
 
 .PHONY: prod-ec2
 prod-ec2:
