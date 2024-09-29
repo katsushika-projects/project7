@@ -58,3 +58,16 @@ prod-up-d:
 prod:
 	@make prod-build
 	@make prod-up-d
+
+.PHONY: prod-ec2-build
+prod-ec2-build:
+	docker compose -f compose-ec2.yml build --no-cache
+
+.PHONY: prod-ec2-up-d
+prod-ec2-up-d:
+	docker compose -f compose-ec2.yml up -d
+
+.PHONY: prod-ec2
+prod-ec2:
+	@make prod-ec2-build
+	@make prod-ec2-up-d

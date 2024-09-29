@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${DB_NAME} -U $${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - project7-webnet
+  
+  django:
+    build:
+      context: ./django
+      dockerfile: Dockerfile.ec2
+    env_file:
+      - .env
+    ports:
+      - 8001:8000
+    volumes:
+      - ./django:/django
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - project7-webnet
+
+networks:
+  project7-webnet:
+    driver: bridge
