@@ -158,7 +158,7 @@ export default function Home() {
   const handleQueryPost = async () => {
     try {
       const response = await axios.get(
-        `https://katsushika-project.net/${query}`
+        `https://katsushika-project.net/memos/${query}`
       );
 
       if (response.status === 200) {
