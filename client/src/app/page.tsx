@@ -224,7 +224,10 @@ export default function Home() {
 
         {/* debug用 */}
 
-        <div id="debug">aaaa</div>
+        <div id="debug">
+          debug list
+          <br />
+        </div>
 
         <div>
           <p style={{ margin: "0", paddingTop: "20px" }}>
@@ -272,15 +275,19 @@ export default function Home() {
                   ref={inputRef[i]}
                   onCompositionStart={() => {
                     const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `composition start 場所${i} <br />`; // Debug用
+                    debug.innerHTML += `onCompositionStart 場所${i} <br />`; // Debug用
+                  }}
+                  onCompositionUpdate={() => {
+                    const debug = document.getElementById("debug")!; // Debug用
+                    debug.innerHTML += `onCompositionUpdate 場所${i} <br />`; // Debug用
                   }}
                   onCompositionEnd={() => {
                     const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `composition end 場所${i} <br />`; // Debug用
+                    debug.innerHTML += `onCompositionEnd 場所${i} <br />`; // Debug用
                   }}
                   onChange={(e) => {
                     const debug = document.getElementById("debug")!; // Debug用
-                    debug.innerHTML += `押した文字${e.target.value} 場所${i} <br />`; // Debug用
+                    debug.innerHTML += `onChange 押した文字${e.target.value} 場所${i} <br />`; // Debug用
 
                     const value = e.target.value;
 
