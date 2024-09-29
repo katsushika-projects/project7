@@ -6,7 +6,7 @@ info:
   version: 1.0.0
 
 paths:
-  /memos:
+  /memos/:
     post:
       tags: [メモ]
       summary: メモを取得する
@@ -37,7 +37,7 @@ paths:
             application/json:
               example:
                 detail: No Memo matches the given query.
-  /memos/{memoId}:
+  /memos/{memoId}/:
     get:
       tags: [メモ]
       summary: メモをmemoIdを用いて取得する
@@ -88,7 +88,7 @@ paths:
             application/json:
               example:
                 detail: No Memo matches the given query.
-  /memos/create:
+  /memos/create/:
     post:
       tags: [メモ]
       summary: メモを作成する
@@ -113,7 +113,7 @@ paths:
               example:
                 memo:
                   - この項目は空にできません。
-  /memos/delete_expired_memos:
+  /memos/delete_expired_memos/:
     delete:
       tags: [メモ]
       summary: 期限切れのメモを削除する
