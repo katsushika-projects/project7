@@ -225,7 +225,7 @@ export default function Home() {
         {/* debug用 */}
 
         <div id="debug">
-          debug list
+          debug list v0.0.1
           <br />
         </div>
 
@@ -272,19 +272,28 @@ export default function Home() {
                   autoFocus={i === 0}
                   value={code[i]}
                   type="text"
-                  inputMode="text" // スマホで英数字入力キーボードを表示
                   ref={inputRef[i]}
                   onChange={(e) => {
                     const value = e.target.value;
 
+                    // 入力が1文字でない場合には、処理をスキップ
                     if (value.length > 1) return;
 
                     const codeArray = [...code];
                     codeArray[i] = value;
                     setCode(codeArray);
 
+                    // 最後の入力欄では次のインプットにフォーカスを移さない
                     if (value !== "" && i < 5) {
                       inputRef[i + 1]?.current?.focus();
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Backspace" && code[i] === "") {
+                      // 現在のinputが空でbackspaceキーが押された場合、前のinputに移動
+                      if (i > 0) {
+                        (inputRef[i - 1]?.current as HTMLInputElement)?.focus();
+                      }
                     }
                   }}
                   style={{
