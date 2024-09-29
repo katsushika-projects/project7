@@ -293,7 +293,7 @@ export default function Home() {
                     const debug = document.getElementById("debug")!;
                     debug.innerHTML += `onChange 押した文字${e.target.value} 場所${i} ${isComposing}<br />`;
 
-                    if (isComposing) return;
+                    // if (isComposing) return;
 
                     const value = e.target.value;
 
