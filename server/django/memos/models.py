@@ -1,4 +1,3 @@
-import os
 import random
 import string
 import uuid
@@ -74,5 +73,4 @@ def generate_passkey(sender, instance, **kwargs):
 @receiver(post_delete, sender=Memo)
 def delete_image_files(sender, instance, **kwargs):
     if instance.qr_img:
-        if os.path.isfile(instance.qr_img.path):
-            os.remove(instance.qr_img.path)
+        instance.qr_img.delete(save=False)
