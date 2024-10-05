@@ -126,9 +126,7 @@ class MemoCreateAPITestCase(APITestCase):
         self.url = reverse("memos:create")
 
     def test_success_post(self) -> None:
-        valid_data = {
-            "memo": "だからしかしながら実人にしのはちょっと低級と得るなけれので、その陰をは立ちなけれどもという教場にもつばみなた。"
-        }
+        valid_data = {"memo": "その陰をは立ちなけれどもという教場にもつばみなた。"}
         res = self.client.post(self.url, valid_data, format="json")
         assert res.status_code == 201
         assert Memo.objects.filter(**valid_data).exists()
