@@ -1,5 +1,5 @@
 [project]
-requires-python = ">=3.11"
+requires-python = ">= 3.11"
 
 [tool.ruff]
 line-length = 120
@@ -10,7 +10,7 @@ select = ["ALL"]
 ignore = ["D203", "D212", "COM812", "ISC001"]
 
 # 徐々に有効にしていく
-extend-ignore = ["D", "DJ", "PLR", "ANN", "RUF", "TRY"]
+extend-ignore = ["D", "DJ", "PLR", "ANN", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 # testではassertを使用してよい
