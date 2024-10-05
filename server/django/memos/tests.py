@@ -1,11 +1,10 @@
 import uuid
 from urllib.parse import urlparse
 
-from rest_framework.test import APITestCase
-
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
+from rest_framework.test import APITestCase
 
 from .models import Memo
 

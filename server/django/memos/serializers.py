@@ -18,5 +18,4 @@ class MemoSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         if request:
             return request.build_absolute_uri(obj.qr_img.url)
-        else:
-            raise Exception("Request object is required to build the absolute URI for 'qr_img'.")
+        raise Exception("Request object is required to build the absolute URI for 'qr_img'.")
