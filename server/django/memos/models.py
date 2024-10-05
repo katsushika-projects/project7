@@ -60,7 +60,7 @@ class Memo(models.Model):
 
 
 @receiver(pre_save, sender=Memo)
-def generate_passkey(sender, instance, **kwargs) -> None:
+def generate_passkey(sender, instance, **kwargs) -> None: # noqa: ARG001
     # ランダムに6文字生成
     while True:
         passkey = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
@@ -71,6 +71,6 @@ def generate_passkey(sender, instance, **kwargs) -> None:
 
 
 @receiver(post_delete, sender=Memo)
-def delete_image_files(sender, instance, **kwargs) -> None:
+def delete_image_files(sender, instance, **kwargs) -> None: # noqa: ARG001
     if instance.qr_img:
         instance.qr_img.delete(save=False)
