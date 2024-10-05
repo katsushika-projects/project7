@@ -23,9 +23,10 @@ class Memo(models.Model):
         super().clean()
         # passkeyが6文字であることを確認
         if len(self.passkey) != 6:
-            raise ValueError("Passkey must be 6 characters long")
+            msg = "Passkey must be 6 characters long"
+            raise ValueError(msg)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         # 通常のsaveを先に呼び出してidを生成
         if not self.id:
             super().save(*args, **kwargs)
@@ -59,7 +60,7 @@ class Memo(models.Model):
 
 
 @receiver(pre_save, sender=Memo)
-def generate_passkey(sender, instance, **kwargs):
+def generate_passkey(sender, instance, **kwargs) -> None:
     # ランダムに6文字生成
     while True:
         passkey = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
@@ -70,6 +71,6 @@ def generate_passkey(sender, instance, **kwargs):
 
 
 @receiver(post_delete, sender=Memo)
-def delete_image_files(sender, instance, **kwargs):
+def delete_image_files(sender, instance, **kwargs) -> None:
     if instance.qr_img:
         instance.qr_img.delete(save=False)
