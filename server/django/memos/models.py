@@ -57,7 +57,8 @@ class Memo(models.Model):
     def clean(self) -> None:
         super().clean()
         # passkeyが6文字であることを確認
-        if len(self.passkey) != 6:
+        passkey_length = 6
+        if len(self.passkey) != passkey_length:
             msg = "Passkey must be 6 characters long"
             raise ValueError(msg)
 
