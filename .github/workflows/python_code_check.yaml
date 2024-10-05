@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  lint:
+  python_code_check:
     runs-on: ubuntu-latest
 
     steps:
