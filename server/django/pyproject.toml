@@ -1,3 +1,6 @@
+[project]
+requires-python = ">=3.11"
+
 [tool.ruff]
 line-length = 120
 extend-exclude = ["**/migrations/*", "manage.py", "asgi.py", "wsgi.py"]
@@ -7,7 +10,7 @@ select = ["ALL"]
 ignore = ["D203", "D212", "COM812", "ISC001"]
 
 # 徐々に有効にしていく
-extend-ignore = ["D", "DJ", "PLR", "ANN", "RUF", "TRY", "B"]
+extend-ignore = ["D", "DJ", "PLR", "ANN", "RUF", "TRY"]
 
 [tool.ruff.lint.per-file-ignores]
 # testではassertを使用してよい

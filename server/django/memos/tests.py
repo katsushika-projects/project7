@@ -65,7 +65,9 @@ class DeleteExpiredMemosAPITestCase(APITestCase):
     def setUp(self) -> None:
         self.url = reverse("memos:delete_expired_memos")
 
-    def create_memo(self, memo_text="Test Memo", created_at=timezone.now()):
+    def create_memo(self, memo_text="Test Memo", created_at: timezone.datetime | None = None) -> Memo:
+        if created_at is None:
+            created_at = timezone.now()
         memo = Memo.objects.create(memo=memo_text)
         memo.save()
         memo.created_at = created_at
