@@ -1,4 +1,4 @@
-import random
+import secrets
 import string
 import uuid
 from io import BytesIO
@@ -63,7 +63,8 @@ class Memo(models.Model):
 def generate_passkey(sender, instance, **kwargs) -> None:  # noqa: ARG001
     # ランダムに6文字生成
     while True:
-        passkey = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
+        characters = string.ascii_lowercase + string.digits
+        passkey = "".join(secrets.choice(characters) for _ in range(6))
         # 重複していなければ採用
         if not Memo.objects.filter(passkey=passkey).exists():
             instance.passkey = passkey
