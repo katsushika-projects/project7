@@ -11,7 +11,7 @@ select = ["ALL"]
 ignore = ["D203", "D212", "COM812", "ISC001"]
 
 # 徐々に有効にしていく
-extend-ignore = ["D", "DJ", "PLR", "ANN"]
+extend-ignore = ["D", "PLR", "ANN"]
 
 [tool.ruff.lint.per-file-ignores]
 # testではassertを使用してよい

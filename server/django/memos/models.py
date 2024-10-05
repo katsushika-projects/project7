@@ -19,12 +19,8 @@ class Memo(models.Model):
     qr_img = models.ImageField(upload_to="qr_codes/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def clean(self) -> None:
-        super().clean()
-        # passkeyが6文字であることを確認
-        if len(self.passkey) != 6:
-            msg = "Passkey must be 6 characters long"
-            raise ValueError(msg)
+    def __str__(self) -> str:
+        return f"Memo {self.id}"
 
     def save(self, *args, **kwargs) -> None:
         # 通常のsaveを先に呼び出してidを生成
@@ -57,6 +53,13 @@ class Memo(models.Model):
 
         # 再度saveを呼び出してQRコードを保存
         super().save(*args, **kwargs)
+
+    def clean(self) -> None:
+        super().clean()
+        # passkeyが6文字であることを確認
+        if len(self.passkey) != 6:
+            msg = "Passkey must be 6 characters long"
+            raise ValueError(msg)
 
 
 @receiver(pre_save, sender=Memo)
