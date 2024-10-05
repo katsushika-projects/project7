@@ -4,7 +4,7 @@ extend-exclude = ["**/migrations/*", "manage.py", "asgi.py", "wsgi.py"]
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D203", "D212", "COM812", "ISC001", "S101"]
+ignore = ["D203", "D212", "COM812", "ISC001"]
 
 # 徐々に有効にしていく
 extend-ignore = ["D", "DJ", "PLR", "ANN", "RUF", "TRY", "B", "E"]
