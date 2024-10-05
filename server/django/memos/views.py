@@ -17,7 +17,7 @@ class MemosAPIView(APIView):
         passkey = request.data.get("passkey")
         if not passkey:
             return Response(
-                {"detail": "passkeyをリクエストボディに含めてください．"}, status=status.HTTP_400_BAD_REQUEST
+                {"detail": "passkeyをリクエストボディに含めてください。"}, status=status.HTTP_400_BAD_REQUEST
             )
 
         # オブジェクトが見つからない場合、404エラーを返す
@@ -36,7 +36,7 @@ class DeleteExpiredMemosAPIView(APIView):
         memos = Memo.objects.filter(created_at__lt=time_threshold)
         deleted_count, _ = memos.delete()
 
-        return Response({"detail": f"{deleted_count}個のmemoを削除しました．"}, status=status.HTTP_200_OK)
+        return Response({"detail": f"{deleted_count}個のmemoを削除しました。"}, status=status.HTTP_200_OK)
 
 
 class MemoRetrieveDestroyAPIView(APIView):
@@ -48,7 +48,7 @@ class MemoRetrieveDestroyAPIView(APIView):
     def delete(self, _, pk):
         memo = get_object_or_404(Memo, pk=pk)
         memo.delete()
-        return Response({"detail": "メモを削除しました．"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "メモを削除しました。"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class MemoCreateAPIView(APIView):

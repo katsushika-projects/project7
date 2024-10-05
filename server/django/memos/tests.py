@@ -58,7 +58,7 @@ class MemoAPITestCase(APITestCase):
         # 失敗時のレスポンスの確認
         assert response.status_code == 400
         assert "detail" in response.data
-        assert response.data["detail"] == "passkeyをリクエストボディに含めてください．"
+        assert response.data["detail"] == "passkeyをリクエストボディに含めてください。"
 
 
 class DeleteExpiredMemosAPITestCase(APITestCase):
@@ -88,7 +88,7 @@ class DeleteExpiredMemosAPITestCase(APITestCase):
         res = self.client.delete(self.url)
         assert res.status_code == 200
         assert Memo.objects.count() == memo_count - expired_memo_count
-        assert res.data["detail"] == f"{expired_memo_count}個のmemoを削除しました．"
+        assert res.data["detail"] == f"{expired_memo_count}個のmemoを削除しました。"
 
 
 class MemoRetrieveDestroyAPITestCase(APITestCase):
@@ -115,7 +115,7 @@ class MemoRetrieveDestroyAPITestCase(APITestCase):
         res = self.client.delete(self.url)
         assert res.status_code == 204
         assert not Memo.objects.filter(pk=self.memo.pk).exists()
-        assert res.data["detail"] == "メモを削除しました．"
+        assert res.data["detail"] == "メモを削除しました。"
 
     def test_failure_delete_with_not_exist_memo(self) -> None:
         res = self.client.delete(reverse("memos:retrieve_destroy", kwargs={"pk": uuid.uuid4()}))

@@ -9,7 +9,7 @@ class MemoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Memo
         fields = "__all__"
-        read_only_fields = ["id", "qr_img", "passkey", "created_at"]
+        read_only_fields = ("id", "qr_img", "passkey", "created_at")
 
     def get_qr_img(self, obj):
         """QRコード画像をHTTP URL に変換して返す."""

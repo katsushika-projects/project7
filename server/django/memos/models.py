@@ -52,7 +52,7 @@ class Memo(models.Model):
         img.save(img_io, "PNG")
         img_content = ContentFile(img_io.getvalue(), "qr_code.png")
 
-        # ImageFieldに画像を保存（インスタンスのIDに基づいたファイル名で保存）
+        # ImageFieldに画像をインスタンスのIDに基づいたファイル名で保存
         self.qr_img.save(f"{self.id}.png", img_content, save=False)
 
         # 再度saveを呼び出してQRコードを保存
