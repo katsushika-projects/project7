@@ -1,3 +1,5 @@
+import "../main.css";
+
 export const metadata = {
   title: "コピっと！",
   description: "PC スマホ ログイン不要で自由にコピペができます",
@@ -13,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ backgroundColor: "rgb(51, 51, 51)", margin: "0" }}>
+      <body className="bg-[#333] m-0 font-['Hiragino_Kaku_Gothic_ProN']">
         {children}
       </body>
     </html>
