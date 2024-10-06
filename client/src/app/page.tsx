@@ -256,7 +256,7 @@ export default function Home() {
                   setData(null);
                   setCode("");
                 }}
-                className="p-1.5 text-[#FF5B5B] bg-[#333333] border-3 border-[#FF5B5B] rounded-lg font-bold"
+                className="p-1.5 text-[#FF5B5B] bg-[#333333] !border !border-[3px] border-[#FF5B5B] rounded-lg font-bold"
               >
                 リセット
               </button>
