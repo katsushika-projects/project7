@@ -12,8 +12,7 @@ interface Data {
 }
 
 export default function Home() {
-  const [code, setCode] = useState<string[]>(["", "", "", "", "", ""]);
-  const [inputIndex, setIndex] = useState(0);
+  const [code, setCode] = useState<string>(""); // 入力を一つの文字列で管理
   const [textareaValue, setTextareaValue] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isCodeEntered, setIsCodeEntered] = useState(false);
@@ -22,6 +21,7 @@ export default function Home() {
   const [query, setQuery] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
   const [isCoppied, setIsCoppied] = useState(false);
+  const [isComposing, setIsComposing] = useState<boolean>(false); // IME合成中かどうかの状態
 
   // クエリパラメータの取得
   useEffect(() => {
@@ -31,28 +31,15 @@ export default function Home() {
     }
   }, []);
 
-  const inputRef: React.RefObject<HTMLInputElement>[] = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ];
-
-  const bsFunction = (event: KeyboardEvent) => {
-    if (event.key === "Backspace" && inputIndex > 0) {
-      inputRef[inputIndex - 1].current?.focus();
-      setIndex(inputIndex - 1);
-    }
-  };
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    document.addEventListener("keydown", bsFunction, false);
-    return () => {
-      document.removeEventListener("keydown", bsFunction, false);
-    };
-  }, []);
+    if (code.length > 0 && !isComposing) {
+      handleCodePost(); // 入力がある場合にリクエストを送る
+    } else {
+      setError(false);
+    }
+  }, [code, isComposing]);
 
   // ウィンドウのサイズに応じてflexDirectionを変更
   useEffect(() => {
@@ -75,18 +62,6 @@ export default function Home() {
       window.removeEventListener("resize", updateFlexDirection);
     };
   }, []);
-
-  useEffect(() => {
-    // コードが6桁入力されたか確認
-    const isSixDigits = code.every((digit) => digit !== "");
-    setIsCodeEntered(isSixDigits);
-
-    if (isSixDigits && !isConfirmed) {
-      handleCodePost(); // 6文字が入力されたらリクエストを送る
-    } else {
-      setError(false); // 1文字でも削除されたらエラーステートをfalseに
-    }
-  }, [code]);
 
   // コピーボタンの機能実装
   const handleCopy = () => {
@@ -127,13 +102,12 @@ export default function Home() {
 
   // passkeyのPOSTリクエストを送信
   const handleCodePost = async () => {
-    const passkey = code.join(""); // 6文字のコードを文字列に変換
     try {
       if (!query) {
         const response = await axios.post(
           "https://katsushika-project.net/memos/",
           {
-            passkey: passkey,
+            passkey: code,
           },
           {
             headers: {
@@ -144,13 +118,16 @@ export default function Home() {
         if (response.status === 200) {
           const responseData = response.data;
           setTextareaValue(responseData.memo);
+          setIsCodeEntered(true);
         } else {
           setError(true);
+          setIsCodeEntered(false);
         }
       }
     } catch (error) {
       console.error("エラー:", error);
       setError(true);
+      setIsCodeEntered(false);
     }
   };
 
@@ -164,7 +141,7 @@ export default function Home() {
       if (response.status === 200) {
         const responseData = response.data;
         setTextareaValue(responseData.memo);
-        const passkeyArray = responseData.passkey.split("").slice(0, 6); // Ensure it's a 6-character string
+        const passkeyArray = responseData.passkey;
         setCode(passkeyArray);
       } else {
         console.error("失敗:", response.statusText);
@@ -258,52 +235,36 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
-              {[...Array(6)].map((_, i) => (
-                <input
-                  maxLength={1} // 入力を1文字に制限
-                  key={i}
-                  autoFocus={i === 0}
-                  value={code[i]}
-                  type="text"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                  spellCheck="false"
-                  ref={inputRef[i]}
-                  onChange={(e) => {
-                    const value = e.target.value;
-
-                    // 入力が1文字でない場合には、処理をスキップ
-                    if (value.length > 1) return;
-
-                    const codeArray = [...code];
-                    codeArray[i] = value;
-                    setCode(codeArray);
-
-                    // 最後の入力欄では次のインプットにフォーカスを移さない
-                    if (value !== "" && i < 5) {
-                      inputRef[i + 1]?.current?.focus();
-                    }
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Backspace" && code[i] === "") {
-                      // 現在のinputが空でbackspaceキーが押された場合、前のinputに移動
-                      if (i > 0) {
-                        (inputRef[i - 1]?.current as HTMLInputElement)?.focus();
-                      }
-                    }
-                  }}
-                  style={{
-                    width: "20px",
-                    height: "35px",
-                    textAlign: "center",
-                    fontSize: "20px",
-                    border: "none",
-                    borderRadius: "5px",
-                    outline: "none",
-                  }}
-                />
-              ))}
+              <input
+                value={code}
+                maxLength={6}
+                type="text"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck="true"
+                ref={inputRef}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={(
+                  e: React.CompositionEvent<HTMLInputElement>
+                ) => {
+                  setIsComposing(false);
+                  setCode(e.currentTarget.value);
+                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setCode(e.currentTarget.value);
+                }}
+                style={{
+                  width: "80%",
+                  height: "35px",
+                  fontSize: "20px",
+                  border: "none",
+                  borderRadius: "5px",
+                  outline: "none",
+                  padding: "5px",
+                  textAlign: "center",
+                }}
+              />
             </div>
           </div>
           <div
@@ -429,7 +390,7 @@ export default function Home() {
                   setTextareaValue("");
                   setIsConfirmed(false);
                   setData(null);
-                  setCode(["", "", "", "", "", ""]);
+                  setCode("");
                 }}
                 style={{
                   padding: "6px 21px",
@@ -486,6 +447,7 @@ export default function Home() {
               margin: "20px 0",
               aspectRatio: "1 / 1",
               height: props ? "280px" : "300px",
+              minHeight: "170px",
             }}
           />
         )}

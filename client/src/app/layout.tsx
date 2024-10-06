@@ -13,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ margin: "0" }}>{children}</body>
+      <body style={{ backgroundColor: "rgb(51, 51, 51)", margin: "0" }}>
+        {children}
+      </body>
     </html>
   );
 }
