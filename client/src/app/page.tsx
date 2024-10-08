@@ -121,6 +121,7 @@ export default function Home() {
         setTextareaValue(responseData.memo);
         const passkeyArray = responseData.passkey;
         setCode(passkeyArray);
+        setIsCodeEntered(true);
       } else {
         console.error("失敗:", response.statusText);
       }
