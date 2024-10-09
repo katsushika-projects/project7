@@ -28,7 +28,7 @@ class MemosAPIView(APIView):
 
 
 class DeleteExpiredMemosAPIView(APIView):
-    def delete(self, _):
+    def delete(self, _request):
         # 現在の時刻からmemoの生存時間分前の時間を計算
         time_threshold = timezone.now() - timedelta(minutes=settings.MEMO_LIFETIME_MINUTES)
 
@@ -45,7 +45,7 @@ class MemoRetrieveDestroyAPIView(APIView):
         serializer = MemoSerializer(memo, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, _, pk):
+    def delete(self, _request, pk):
         memo = get_object_or_404(Memo, pk=pk)
         memo.delete()
         return Response({"detail": "メモを削除しました。"}, status=status.HTTP_204_NO_CONTENT)
