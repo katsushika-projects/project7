@@ -14,7 +14,7 @@ export const metadata = {
     siteName: "コピっと！",
     url: "https://www.copitto.com/",
     images: {
-      url: "/assets/ogp.png",
+      url: "../public/assets/ogp.png",
       type: "image/png",
       width: 1200,
       height: 630,
@@ -28,7 +28,7 @@ export const metadata = {
     siteName: "コピっと！",
     url: "https://www.copitto.com/",
     images: {
-      url: "/assets/ogp.png",
+      url: "../public/assets/ogp.png",
       type: "image/png",
       width: 1200,
       height: 630,
