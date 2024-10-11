@@ -30,18 +30,9 @@ yarn storybook
 
 src
 ├── app
-│   ├── main-provider.tsx   # 各種providerの読み込み
-│   └── routes              # ルーティングの設定及び各ページのルートコンポーネント
-├── assets                  # 画像などの静的ファイル
-├── components
-│   ├── ui                  # 共通パーツ
-│   └── layout              # ページレイアウト
-├── features                # 特定の機能に限定した実装
-│   └── [機能名]
-│       ├── components
-│       └── hooks
-├── hooks                   # 共通hooks
-├── types                   # 共通type
+│   ├── layout.tsx   # metaデータの設定
+│   └── page.tsx              # ルートコンポーネント
+├── assets
 
 ```
 
