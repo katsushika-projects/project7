@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { QRCodeSVG } from "qrcode.react";
-import { useSearchParams } from "next/navigation";
 
 interface Data {
   id: string;
@@ -20,24 +19,26 @@ export default function Home() {
   const [hasCodeEntered, setHasCodeEntered] = useState(false);
   const [data, setData] = useState<Data | null>(null);
   const [error, setError] = useState<boolean>(false);
+  const [query, setQuery] = useState<string | null>(null);
   const [isCopied, setIsCopied] = useState(false);
   const [isComposing, setIsComposing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Next.js 13+ app routerの場合 useSearchParamsでクエリ取得
-  const searchParams = useSearchParams();
-  const query = searchParams.get("id");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setQuery(params.get("id"));
+  }, []);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (code.length > 0 && !isComposing && !query) {
+    if (code.length > 0 && !isComposing) {
       handleCodePost();
     } else {
       setError(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, isComposing, query]);
+  }, [code, isComposing]);
 
   // コピーボタンの機能実装
   const handleCopy = () => {
