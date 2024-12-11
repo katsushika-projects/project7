@@ -137,9 +137,6 @@ if USE_S3_FOR_STATIC:
     INSTALLED_APPS += ["storages"]
 
     STORAGES = {
-        "default": {
-            "BACKEND": "config.storages_backends.MediaS3Storage",
-        },
         "staticfiles": {
             "BACKEND": "config.storages_backends.StaticS3Storage",
         },
@@ -152,16 +149,12 @@ if USE_S3_FOR_STATIC:
 
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 else:
     STATIC_URL = env.str("DJANGO_STATIC_URL")  # 静的ファイルにブラウザでアクセスする際に使用するURL
     STATIC_ROOT = env.str(
         "DJANGO_STATIC_ROOT"
     )  # 静的ファイルが実際に保存される場所 collectstaticコマンドで集められる場所
-
-    MEDIA_URL = env.str("DJANGO_MEDIA_URL")  # メディアファイルにブラウザでアクセスする際に使用するURL
-    MEDIA_ROOT = env.str("DJANGO_MEDIA_ROOT")  # メディアファイルが実際に保存される場所
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
