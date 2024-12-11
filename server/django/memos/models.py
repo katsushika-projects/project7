@@ -1,23 +1,14 @@
 import random
 import string
 import uuid
-from io import BytesIO
 
-import qrcode
-
-from django.core.files.base import ContentFile
 from django.db import models
-from django.db.models.signals import post_delete, pre_save
-from django.dispatch import receiver
-
-from .utils import get_frontend_url
 
 
 class Memo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     memo = models.TextField()
     passkey = models.CharField(unique=True, max_length=6)
-    qr_img = models.ImageField(upload_to="qr_codes/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self) -> None:
@@ -27,40 +18,11 @@ class Memo(models.Model):
             raise ValueError("Passkey must be 6 characters long")
 
     def save(self, *args, **kwargs):
-        # 通常のsaveを先に呼び出してidを生成
-        if not self.id:
-            super().save(*args, **kwargs)
-
-        # インスタンスのidを含むURLを生成
-        full_url = get_frontend_url(self.id)  # 自身のIDを含むURLを生成
-
-        # URLからQRコードを生成
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(full_url)
-        qr.make(fit=True)
-
-        # 生成したQRコードを画像に変換
-        img = qr.make_image(fill="black", back_color="white")
-
-        # 画像を一時メモリに保存
-        img_io = BytesIO()
-        img.save(img_io, "PNG")
-        img_content = ContentFile(img_io.getvalue(), "qr_code.png")
-
-        # ImageFieldに画像を保存（インスタンスのIDに基づいたファイル名で保存）
-        self.qr_img.save(f"{self.id}.png", img_content, save=False)
-
-        # 再度saveを呼び出してQRコードを保存
+        generate_passkey(self)
         super().save(*args, **kwargs)
 
 
-@receiver(pre_save, sender=Memo)
-def generate_passkey(sender, instance, **kwargs):
+def generate_passkey(instance):
     # ランダムに6文字生成
     while True:
         passkey = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
@@ -68,9 +30,3 @@ def generate_passkey(sender, instance, **kwargs):
         if not Memo.objects.filter(passkey=passkey).exists():
             instance.passkey = passkey
             break
-
-
-@receiver(post_delete, sender=Memo)
-def delete_image_files(sender, instance, **kwargs):
-    if instance.qr_img:
-        instance.qr_img.delete(save=False)
