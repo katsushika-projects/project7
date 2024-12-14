@@ -30,7 +30,7 @@ jobs:
         aws ssm send-command \
           --document-name "AWS-RunShellScript" \
           --targets "Key=instanceIds,Values=${{ secrets.EC2_INSTANCE_ID }}" \
-          --parameters 'commands=["cd ~/project7/server && git pull origin main", "sudo make prod-ec2"]' \
+          --parameters 'commands=["cd /home/ubuntu/project7/server && git pull origin main && sudo make prod-ec2"]' \
           --region ${{ env.AWS_REGION }} \
           --timeout-seconds 300
         echo "SSM command executed successfully"
