@@ -1,5 +1,0 @@
-{
-    "python.analysis.diagnosticSeverityOverrides": {
-        "reportMissingImports": "none" // environの赤線を消す
-    }
-}
