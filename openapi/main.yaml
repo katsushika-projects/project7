@@ -114,7 +114,7 @@ paths:
                 memo:
                   - この項目は空にできません。
   /memos/delete_expired_memos/:
-    delete:
+    post:
       tags: [メモ]
       summary: 期限切れのメモを削除する
       description: 作成から一定時間経過したメモを削除するエンドポイント
@@ -138,10 +138,6 @@ components:
       type: string
       examples:
         - あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。
-    qr_img:
-      type: string
-      examples:
-        - https://example.com/qr_img.png
     passkey:
       type: string
       examples:
@@ -159,8 +155,6 @@ components:
           $ref: '#/components/schemas/id'
         memo:
           $ref: '#/components/schemas/memo'
-        qr_img:
-          $ref: '#/components/schemas/qr_img'
         passkey:
           $ref: '#/components/schemas/passkey'
         created_at:
