@@ -1,11 +1,49 @@
 openapi: 3.1.0
 
 info:
-  title: 端末間メモ共有アプリ
-  summary: WEBブラウザで使用することができ，端末間でメモを共有することができるアプリケーションです． 
-  version: 1.0.0
+  title: 端末間メモ共有アプリ API
+  summary: 端末間でメモを共有するWebアプリケーションのAPI
+  version: 2.0.0
 
 paths:
+  /health:
+    get:
+      tags: [システム]
+      summary: ヘルスチェック
+      description: APIサーバーとデータベースの動作状況を確認
+      responses:
+        '200':
+          description: 正常動作
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  database:
+                    type: string
+                    example: "connected"
+                  environment:
+                    type: string
+                    example: "cloudflare-workers"
+        '500':
+          description: システム異常
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "unhealthy"
+                  error:
+                    type: string
+
   /memos/:
     post:
       tags: [メモ]
