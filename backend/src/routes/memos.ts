@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { memos } from '@/db/schema';
-import { eq, lt } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { createMemoSchema, getMemoByPasskeySchema, memoIdParamSchema } from '@/validators/memo';
 import { zValidator } from '@hono/zod-validator';
 import { getUniquePasskey } from '@/db/passkey';
@@ -19,18 +19,6 @@ memosRoute.post('/create', zValidator('json', createMemoSchema), async (c) => {
   const passkey = await getUniquePasskey(db);
   const newMemo = await db.insert(memos).values({ memo, passkey }).returning().get();
   return c.json(newMemo, 201);
-});
-
-/**
- * POST /memos/delete_expired_memos
- * 作成されてから15分以上経過したメモを削除して、削除した件数を返す
- */
-memosRoute.post('/delete_expired_memos', async (c) => {
-  const db = drizzle(c.env.DB);
-  const MEMO_LIFETIME_MINUTES = 15;
-  const expiredDate = new Date(Date.now() - MEMO_LIFETIME_MINUTES * 60 * 1000).toISOString();
-  const deletedMemos = await db.delete(memos).where(lt(memos.createdAt, expiredDate)).returning();
-  return c.json({ detail: `deleted ${deletedMemos.length} memos.` }, 200);
 });
 
 /**

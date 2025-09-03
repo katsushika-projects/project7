@@ -151,18 +151,6 @@ paths:
               example:
                 memo:
                   - この項目は空にできません。
-  /memos/delete_expired_memos/:
-    post:
-      tags: [メモ]
-      summary: 期限切れのメモを削除する
-      description: 作成から一定時間経過したメモを削除するエンドポイント
-      responses:
-        '200':
-          description: 期限切れのメモの削除に成功
-          content:
-            application/json:
-              example:
-                detail: 4個のmemoを削除しました．
 
 
 components:
